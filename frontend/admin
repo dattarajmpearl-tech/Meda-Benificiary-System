@@ -3,35 +3,134 @@
 <head>
   <title>Beneficiary Form</title>
   <script src="https://unpkg.com/html5-qrcode"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 100%;
+    }
+    h2 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 20px;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #555;
+    }
+    input[type="text"], input[type="file"] {
+      padding: 10px;
+      margin-bottom: 15px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .scanner-section {
+      margin-bottom: 15px;
+    }
+    .scanner-container {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 15px;
+    }
+    .scanner {
+      flex: 1;
+    }
+    .scanner h4 {
+      margin: 0 0 10px 0;
+      color: #333;
+    }
+    #reader1, #reader2 {
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+    button {
+      padding: 12px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    @media (max-width: 768px) {
+      .scanner-container {
+        flex-direction: column;
+      }
+    }
+  </style>
 </head>
 
 <body>
+  <div class="container">
+    <h2>Beneficiary Form</h2>
 
-<h2>Beneficiary Form</h2>
+    <form id="form">
+      <label for="beneficiary_no">Beneficiary No:</label>
+      <input name="beneficiary_no" id="beneficiary_no" placeholder="Enter Beneficiary Number" required><br><br>
 
-<form id="form">
-  <input name="beneficiary_no" placeholder="Beneficiary No"><br><br>
-  <input name="beneficiary_name" placeholder="Name"><br><br>
-  <input name="controller_no" placeholder="Controller"><br><br>
+      <label for="beneficiary_name">Beneficiary Name:</label>
+      <input name="beneficiary_name" id="beneficiary_name" placeholder="Enter Name" required><br><br>
 
-  <h4>Scan Pump</h4>
-  <div id="reader1" style="width:300px;"></div>
-  <input name="pump_no" id="pump"><br><br>
+      <label for="installer_name">Installer Name:</label>
+      <input name="installer_name" id="installer_name" placeholder="Enter Installer Name" required><br><br>
 
-  <h4>Scan Panel</h4>
-  <div id="reader2" style="width:300px;"></div>
-  <input name="panel_no" id="panel"><br><br>
+      <div class="scanner-section">
+        <div class="scanner-container">
+          <div class="scanner">
+            <h4>Scan Controller</h4>
+            <div id="reader0" style="width:100%; max-width:300px;"></div>
+            <input name="controller_no" id="controller" placeholder="Controller Number" readonly>
+          </div>
+          <div class="scanner">
+            <h4>Scan Pump</h4>
+            <div id="reader1" style="width:100%; max-width:300px;"></div>
+            <input name="pump_no" id="pump" placeholder="Pump Number" readonly>
+          </div>
+        </div>
+        <div class="scanner">
+          <h4>Scan Panel</h4>
+          <div id="reader2" style="width:100%; max-width:300px;"></div>
+          <input name="panel_no" id="panel" placeholder="Panel Number" readonly>
+        </div>
+      </div>
 
-  <input type="file" name="pdf"><br><br>
+      <label for="pdf">Upload PDF:</label>
+      <input type="file" name="pdf" id="pdf" accept=".pdf" required><br><br>
 
-  <button type="submit">Submit</button>
-</form>
+      <button type="submit">Submit</button>
+    </form>
 
 <script>
 // ===== BARCODE =====
+function scanController(text){ document.getElementById("controller").value = text; }
 function scanPump(text){ document.getElementById("pump").value = text; }
 function scanPanel(text){ document.getElementById("panel").value = text; }
 
+new Html5QrcodeScanner("reader0",{fps:10}).render(scanController);
 new Html5QrcodeScanner("reader1",{fps:10}).render(scanPump);
 new Html5QrcodeScanner("reader2",{fps:10}).render(scanPanel);
 
@@ -41,7 +140,7 @@ document.getElementById("form").addEventListener("submit", async function(e){
 
   const formData = new FormData(this);
 
-  const res = await fetch("https://YOUR-BACKEND.onrender.com/submit", {
+  const res = await fetch("http://localhost:3000/submit", {
     method: "POST",
     body: formData
   });
@@ -50,5 +149,6 @@ document.getElementById("form").addEventListener("submit", async function(e){
 });
 </script>
 
+  </div>
 </body>
 </html>

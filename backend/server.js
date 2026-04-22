@@ -60,6 +60,7 @@ app.post("/submit", upload.single("pdf"), (req, res) => {
   const record = {
     beneficiary_no: req.body.beneficiary_no,
     beneficiary_name: req.body.beneficiary_name,
+    installer_name: req.body.installer_name,
     controller_no: req.body.controller_no,
     pump_no: req.body.pump_no,
     panel_no: req.body.panel_no,
@@ -100,10 +101,10 @@ app.get("/download", verifyToken, (req, res) => {
 
   const data = JSON.parse(fs.readFileSync("data.json"));
 
-  let csv = "No,Name,Controller,Pump,Panel,Date\n";
+  let csv = "No,Name,Installer,Controller,Pump,Panel,Date\n";
 
   data.forEach(d => {
-    csv += `${d.beneficiary_no},${d.beneficiary_name},${d.controller_no},${d.pump_no},${d.panel_no},${d.date}\n`;
+    csv += `${d.beneficiary_no},${d.beneficiary_name},${d.installer_name},${d.controller_no},${d.pump_no},${d.panel_no},${d.date}\n`;
   });
 
   fs.writeFileSync("data.csv", csv);
