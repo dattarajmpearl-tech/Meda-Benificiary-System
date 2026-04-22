@@ -140,7 +140,7 @@ document.getElementById("form").addEventListener("submit", async function(e){
 
   const formData = new FormData(this);
 
-  const res = await fetch("http://localhost:3000/submit", {
+  const res = await fetch("/submit", {
     method: "POST",
     body: formData
   });
