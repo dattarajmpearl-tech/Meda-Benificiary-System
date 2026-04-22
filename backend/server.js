@@ -12,6 +12,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, '../frontend')));
 
+const upload = multer({ dest: "uploads/" });
+
 // ===== SERVE FRONTEND =====
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../frontend/index.html'));
