@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Beneficiary Form</title>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+</head>
+
+<body>
+
+<h2>Beneficiary Form</h2>
+
+<form id="form">
+  <input name="beneficiary_no" placeholder="Beneficiary No"><br><br>
+  <input name="beneficiary_name" placeholder="Name"><br><br>
+  <input name="controller_no" placeholder="Controller"><br><br>
+
+  <h4>Scan Pump</h4>
+  <div id="reader1" style="width:300px;"></div>
+  <input name="pump_no" id="pump"><br><br>
+
+  <h4>Scan Panel</h4>
+  <div id="reader2" style="width:300px;"></div>
+  <input name="panel_no" id="panel"><br><br>
+
+  <input type="file" name="pdf"><br><br>
+
+  <button type="submit">Submit</button>
+</form>
+
+<script>
+// ===== BARCODE =====
+function scanPump(text){ document.getElementById("pump").value = text; }
+function scanPanel(text){ document.getElementById("panel").value = text; }
+
+new Html5QrcodeScanner("reader1",{fps:10}).render(scanPump);
+new Html5QrcodeScanner("reader2",{fps:10}).render(scanPanel);
+
+// ===== SUBMIT =====
+document.getElementById("form").addEventListener("submit", async function(e){
+  e.preventDefault();
+
+  const formData = new FormData(this);
+
+  const res = await fetch("https://YOUR-BACKEND.onrender.com/submit", {
+    method: "POST",
+    body: formData
+  });
+
+  alert(await res.text());
+});
+</script>
+
+</body>
+</html>
